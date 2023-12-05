@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS "subject" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT
+);
+CREATE TABLE IF NOT EXISTS "report" (
+  "id" SERIAL PRIMARY KEY,
+  "subject_id" INTEGER REFERENCES "subject"("id"),
+  "name" TEXT
+);
+CREATE TABLE IF NOT EXISTS "word" (
+  "id" SERIAL PRIMARY KEY,
+  "word" TEXT UNIQUE
+);
+CREATE TABLE IF NOT EXISTS "score" (
+  "id" SERIAL PRIMARY KEY,
+  "report_id" INTEGER REFERENCES "report"("id"),
+  "score_par" DOUBLE PRECISION,
+  "score_word" DOUBLE PRECISION
+);
+CREATE TABLE IF NOT EXISTS "paragraph" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT,
+  "report_id" INTEGER REFERENCES "report"("id")
+);
+CREATE TABLE IF NOT EXISTS "paragraph_and_word" (
+  "id" SERIAL PRIMARY KEY,
+  "paragraph_id" INTEGER REFERENCES "paragraph"("id"),
+  "word_id" INTEGER REFERENCES "word"("id")
+);
+CREATE SEQUENCE IF NOT EXISTS paragraph_id_seq OWNED BY paragraph.id;
+CREATE SEQUENCE IF NOT EXISTS paragraph_and_word_id_seq OWNED BY paragraph_and_word.id;
+CREATE SEQUENCE IF NOT EXISTS report_id_seq OWNED BY report.id;
+CREATE SEQUENCE IF NOT EXISTS score_id_seq OWNED BY score.id;
+CREATE SEQUENCE IF NOT EXISTS subject_id_seq OWNED BY subject.id;
+CREATE SEQUENCE IF NOT EXISTS word_id_seq OWNED BY word.id;
+alter table paragraph alter column id set default nextval('public.paragraph_id_seq');
+alter table paragraph_and_word alter column id set default nextval('public.paragraph_and_word_id_seq');
+alter table report alter column id set default nextval('public.report_id_seq');
+alter table score alter column id set default nextval('public.score_id_seq');
+alter table subject alter column id set default nextval('public.subject_id_seq');
+alter table word alter column id set default nextval('public.word_id_seq');
+
